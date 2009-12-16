@@ -7,9 +7,9 @@ from SimpleMixer import SimpleMixer
 from SimpleEncoder import SimpleEncoder
 
 class Main:
-    '''
+    """
         main
-    '''
+    """
 
     def __init__(self, code_lines):
         self._origin_code_lists = code_lines
