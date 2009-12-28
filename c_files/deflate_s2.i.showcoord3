@@ -1,0 +1,446 @@
+FileAST: 
+  Typedef: name='__off_t', quals=[], storage=['typedef']
+    TypeDecl: declname='__off_t', quals=[]
+      IdentifierType: names=['int', 'long']
+  Typedef: name='off_t', quals=[], storage=['typedef']
+    TypeDecl: declname='off_t', quals=[]
+      IdentifierType: names=['__off_t']
+  Typedef: name='IPos', quals=[], storage=['typedef']
+    TypeDecl: declname='IPos', quals=[]
+      IdentifierType: names=['unsigned']
+  FuncDef: 
+    Decl: name='deflate', quals=[], storage=[]
+      FuncDecl: 
+        TypeDecl: declname='deflate', quals=[]
+          IdentifierType: names=['off_t']
+    Compound: 
+      Decl: name='hash_head', quals=[], storage=[]
+        TypeDecl: declname='hash_head', quals=[]
+          IdentifierType: names=['IPos']
+      Decl: name='prev_match', quals=[], storage=[]
+        TypeDecl: declname='prev_match', quals=[]
+          IdentifierType: names=['IPos']
+      Decl: name='flush', quals=[], storage=[]
+        TypeDecl: declname='flush', quals=[]
+          IdentifierType: names=['int']
+      Decl: name='match_available', quals=[], storage=[]
+        TypeDecl: declname='match_available', quals=[]
+          IdentifierType: names=['int']
+        Constant: type='int', value='0'
+      Decl: name='match_length', quals=[], storage=['register']
+        TypeDecl: declname='match_length', quals=[]
+          IdentifierType: names=['unsigned']
+        BinaryOp: op='-'
+          Constant: type='int', value='3'
+          Constant: type='int', value='1'
+      If: 
+        BinaryOp: op='<='
+          ID: name='compr_level'
+          Constant: type='int', value='3'
+        Return: 
+          FuncCall: 
+            ID: name='deflate_fast'
+      While: 
+        BinaryOp: op='!='
+          ID: name='lookahead'
+          Constant: type='int', value='0'
+        Compound: 
+          ExprList: 
+            Assignment: op='='
+              ID: name='ins_h'
+              BinaryOp: op='&'
+                BinaryOp: op='^'
+                  BinaryOp: op='<<'
+                    ID: name='ins_h'
+                    BinaryOp: op='/'
+                      BinaryOp: op='-'
+                        BinaryOp: op='+'
+                          Constant: type='int', value='15'
+                          Constant: type='int', value='3'
+                        Constant: type='int', value='1'
+                      Constant: type='int', value='3'
+                  ArrayRef: 
+                    ID: name='window'
+                    BinaryOp: op='-'
+                      BinaryOp: op='+'
+                        ID: name='strstart'
+                        Constant: type='int', value='3'
+                      Constant: type='int', value='1'
+                BinaryOp: op='-'
+                  Cast: 
+                    Typename: quals=[]
+                      TypeDecl: declname=None, quals=[]
+                        IdentifierType: names=['unsigned']
+                    BinaryOp: op='<<'
+                      Constant: type='int', value='1'
+                      Constant: type='int', value='15'
+                  Constant: type='int', value='1'
+            Assignment: op='='
+              ArrayRef: 
+                ID: name='prev'
+                BinaryOp: op='&'
+                  ID: name='strstart'
+                  BinaryOp: op='-'
+                    Constant: type='int', value='0x8000'
+                    Constant: type='int', value='1'
+              Assignment: op='='
+                ID: name='hash_head'
+                ArrayRef: 
+                  BinaryOp: op='+'
+                    ID: name='prev'
+                    Constant: type='int', value='0x8000'
+                  ID: name='ins_h'
+            Assignment: op='='
+              ArrayRef: 
+                BinaryOp: op='+'
+                  ID: name='prev'
+                  Constant: type='int', value='0x8000'
+                ID: name='ins_h'
+              ID: name='strstart'
+          ExprList: 
+            Assignment: op='='
+              ID: name='prev_length'
+              ID: name='match_length'
+            Assignment: op='='
+              ID: name='prev_match'
+              ID: name='match_start'
+          Assignment: op='='
+            ID: name='match_length'
+            BinaryOp: op='-'
+              Constant: type='int', value='3'
+              Constant: type='int', value='1'
+          If: 
+            BinaryOp: op='&&'
+              BinaryOp: op='&&'
+                BinaryOp: op='&&'
+                  BinaryOp: op='!='
+                    ID: name='hash_head'
+                    Constant: type='int', value='0'
+                  BinaryOp: op='<'
+                    ID: name='prev_length'
+                    ID: name='max_lazy_match'
+                BinaryOp: op='<='
+                  BinaryOp: op='-'
+                    ID: name='strstart'
+                    ID: name='hash_head'
+                  BinaryOp: op='-'
+                    Constant: type='int', value='0x8000'
+                    BinaryOp: op='+'
+                      BinaryOp: op='+'
+                        Constant: type='int', value='258'
+                        Constant: type='int', value='3'
+                      Constant: type='int', value='1'
+              BinaryOp: op='<='
+                ID: name='strstart'
+                BinaryOp: op='-'
+                  ID: name='window_size'
+                  BinaryOp: op='+'
+                    BinaryOp: op='+'
+                      Constant: type='int', value='258'
+                      Constant: type='int', value='3'
+                    Constant: type='int', value='1'
+            Compound: 
+              Assignment: op='='
+                ID: name='match_length'
+                FuncCall: 
+                  ID: name='longest_match'
+                  ExprList: 
+                    ID: name='hash_head'
+              If: 
+                BinaryOp: op='>'
+                  ID: name='match_length'
+                  ID: name='lookahead'
+                Assignment: op='='
+                  ID: name='match_length'
+                  ID: name='lookahead'
+              If: 
+                BinaryOp: op='&&'
+                  BinaryOp: op='=='
+                    ID: name='match_length'
+                    Constant: type='int', value='3'
+                  BinaryOp: op='>'
+                    BinaryOp: op='-'
+                      ID: name='strstart'
+                      ID: name='match_start'
+                    Constant: type='int', value='4096'
+                Compound: 
+                  UnaryOp: op='p--'
+                    ID: name='match_length'
+          If: 
+            BinaryOp: op='&&'
+              BinaryOp: op='>='
+                ID: name='prev_length'
+                Constant: type='int', value='3'
+              BinaryOp: op='<='
+                ID: name='match_length'
+                ID: name='prev_length'
+            Compound: 
+              Assignment: op='='
+                ID: name='flush'
+                FuncCall: 
+                  ID: name='ct_tally'
+                  ExprList: 
+                    BinaryOp: op='-'
+                      BinaryOp: op='-'
+                        ID: name='strstart'
+                        Constant: type='int', value='1'
+                      ID: name='prev_match'
+                    BinaryOp: op='-'
+                      ID: name='prev_length'
+                      Constant: type='int', value='3'
+              Assignment: op='-='
+                ID: name='lookahead'
+                BinaryOp: op='-'
+                  ID: name='prev_length'
+                  Constant: type='int', value='1'
+              Assignment: op='-='
+                ID: name='prev_length'
+                Constant: type='int', value='2'
+              DoWhile: 
+                BinaryOp: op='!='
+                  UnaryOp: op='--'
+                    ID: name='prev_length'
+                  Constant: type='int', value='0'
+                Compound: 
+                  UnaryOp: op='p++'
+                    ID: name='strstart'
+                  ExprList: 
+                    Assignment: op='='
+                      ID: name='ins_h'
+                      BinaryOp: op='&'
+                        BinaryOp: op='^'
+                          BinaryOp: op='<<'
+                            ID: name='ins_h'
+                            BinaryOp: op='/'
+                              BinaryOp: op='-'
+                                BinaryOp: op='+'
+                                  Constant: type='int', value='15'
+                                  Constant: type='int', value='3'
+                                Constant: type='int', value='1'
+                              Constant: type='int', value='3'
+                          ArrayRef: 
+                            ID: name='window'
+                            BinaryOp: op='-'
+                              BinaryOp: op='+'
+                                ID: name='strstart'
+                                Constant: type='int', value='3'
+                              Constant: type='int', value='1'
+                        BinaryOp: op='-'
+                          Cast: 
+                            Typename: quals=[]
+                              TypeDecl: declname=None, quals=[]
+                                IdentifierType: names=['unsigned']
+                            BinaryOp: op='<<'
+                              Constant: type='int', value='1'
+                              Constant: type='int', value='15'
+                          Constant: type='int', value='1'
+                    Assignment: op='='
+                      ArrayRef: 
+                        ID: name='prev'
+                        BinaryOp: op='&'
+                          ID: name='strstart'
+                          BinaryOp: op='-'
+                            Constant: type='int', value='0x8000'
+                            Constant: type='int', value='1'
+                      Assignment: op='='
+                        ID: name='hash_head'
+                        ArrayRef: 
+                          BinaryOp: op='+'
+                            ID: name='prev'
+                            Constant: type='int', value='0x8000'
+                          ID: name='ins_h'
+                    Assignment: op='='
+                      ArrayRef: 
+                        BinaryOp: op='+'
+                          ID: name='prev'
+                          Constant: type='int', value='0x8000'
+                        ID: name='ins_h'
+                      ID: name='strstart'
+              Assignment: op='='
+                ID: name='match_available'
+                Constant: type='int', value='0'
+              Assignment: op='='
+                ID: name='match_length'
+                BinaryOp: op='-'
+                  Constant: type='int', value='3'
+                  Constant: type='int', value='1'
+              UnaryOp: op='p++'
+                ID: name='strstart'
+              If: 
+                ID: name='flush'
+                ExprList: 
+                  FuncCall: 
+                    ID: name='flush_block'
+                    ExprList: 
+                      TernaryOp: 
+                        BinaryOp: op='>='
+                          ID: name='block_start'
+                          Constant: type='int', value='0L'
+                        Cast: 
+                          Typename: quals=[]
+                            PtrDecl: quals=[]
+                              TypeDecl: declname=None, quals=[]
+                                IdentifierType: names=['char']
+                          UnaryOp: op='&'
+                            ArrayRef: 
+                              ID: name='window'
+                              Cast: 
+                                Typename: quals=[]
+                                  TypeDecl: declname=None, quals=[]
+                                    IdentifierType: names=['unsigned']
+                                ID: name='block_start'
+                        Cast: 
+                          Typename: quals=[]
+                            PtrDecl: quals=[]
+                              TypeDecl: declname=None, quals=[]
+                                IdentifierType: names=['char']
+                          Cast: 
+                            Typename: quals=[]
+                              PtrDecl: quals=[]
+                                TypeDecl: declname=None, quals=[]
+                                  IdentifierType: names=['void']
+                            Constant: type='int', value='0'
+                      BinaryOp: op='-'
+                        Cast: 
+                          Typename: quals=[]
+                            TypeDecl: declname=None, quals=[]
+                              IdentifierType: names=['long']
+                          ID: name='strstart'
+                        ID: name='block_start'
+                      Constant: type='int', value='0'
+                  Assignment: op='='
+                    ID: name='block_start'
+                    ID: name='strstart'
+            If: 
+              ID: name='match_available'
+              Compound: 
+                If: 
+                  FuncCall: 
+                    ID: name='ct_tally'
+                    ExprList: 
+                      Constant: type='int', value='0'
+                      ArrayRef: 
+                        ID: name='window'
+                        BinaryOp: op='-'
+                          ID: name='strstart'
+                          Constant: type='int', value='1'
+                  Compound: 
+                    ExprList: 
+                      FuncCall: 
+                        ID: name='flush_block'
+                        ExprList: 
+                          TernaryOp: 
+                            BinaryOp: op='>='
+                              ID: name='block_start'
+                              Constant: type='int', value='0L'
+                            Cast: 
+                              Typename: quals=[]
+                                PtrDecl: quals=[]
+                                  TypeDecl: declname=None, quals=[]
+                                    IdentifierType: names=['char']
+                              UnaryOp: op='&'
+                                ArrayRef: 
+                                  ID: name='window'
+                                  Cast: 
+                                    Typename: quals=[]
+                                      TypeDecl: declname=None, quals=[]
+                                        IdentifierType: names=['unsigned']
+                                    ID: name='block_start'
+                            Cast: 
+                              Typename: quals=[]
+                                PtrDecl: quals=[]
+                                  TypeDecl: declname=None, quals=[]
+                                    IdentifierType: names=['char']
+                              Cast: 
+                                Typename: quals=[]
+                                  PtrDecl: quals=[]
+                                    TypeDecl: declname=None, quals=[]
+                                      IdentifierType: names=['void']
+                                Constant: type='int', value='0'
+                          BinaryOp: op='-'
+                            Cast: 
+                              Typename: quals=[]
+                                TypeDecl: declname=None, quals=[]
+                                  IdentifierType: names=['long']
+                              ID: name='strstart'
+                            ID: name='block_start'
+                          Constant: type='int', value='0'
+                      Assignment: op='='
+                        ID: name='block_start'
+                        ID: name='strstart'
+                UnaryOp: op='p++'
+                  ID: name='strstart'
+                UnaryOp: op='p--'
+                  ID: name='lookahead'
+              Compound: 
+                Assignment: op='='
+                  ID: name='match_available'
+                  Constant: type='int', value='1'
+                UnaryOp: op='p++'
+                  ID: name='strstart'
+                UnaryOp: op='p--'
+                  ID: name='lookahead'
+          While: 
+            BinaryOp: op='&&'
+              BinaryOp: op='<'
+                ID: name='lookahead'
+                BinaryOp: op='+'
+                  BinaryOp: op='+'
+                    Constant: type='int', value='258'
+                    Constant: type='int', value='3'
+                  Constant: type='int', value='1'
+              UnaryOp: op='!'
+                ID: name='eofile'
+            FuncCall: 
+              ID: name='fill_window'
+      If: 
+        ID: name='match_available'
+        FuncCall: 
+          ID: name='ct_tally'
+          ExprList: 
+            Constant: type='int', value='0'
+            ArrayRef: 
+              ID: name='window'
+              BinaryOp: op='-'
+                ID: name='strstart'
+                Constant: type='int', value='1'
+      Return: 
+        FuncCall: 
+          ID: name='flush_block'
+          ExprList: 
+            TernaryOp: 
+              BinaryOp: op='>='
+                ID: name='block_start'
+                Constant: type='int', value='0L'
+              Cast: 
+                Typename: quals=[]
+                  PtrDecl: quals=[]
+                    TypeDecl: declname=None, quals=[]
+                      IdentifierType: names=['char']
+                UnaryOp: op='&'
+                  ArrayRef: 
+                    ID: name='window'
+                    Cast: 
+                      Typename: quals=[]
+                        TypeDecl: declname=None, quals=[]
+                          IdentifierType: names=['unsigned']
+                      ID: name='block_start'
+              Cast: 
+                Typename: quals=[]
+                  PtrDecl: quals=[]
+                    TypeDecl: declname=None, quals=[]
+                      IdentifierType: names=['char']
+                Cast: 
+                  Typename: quals=[]
+                    PtrDecl: quals=[]
+                      TypeDecl: declname=None, quals=[]
+                        IdentifierType: names=['void']
+                  Constant: type='int', value='0'
+            BinaryOp: op='-'
+              Cast: 
+                Typename: quals=[]
+                  TypeDecl: declname=None, quals=[]
+                    IdentifierType: names=['long']
+                ID: name='strstart'
+              ID: name='block_start'
+            Constant: type='int', value='1'
