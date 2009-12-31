@@ -37,5 +37,6 @@ for block in blocks:
         sm1 = construct_proper_update_for_output("updateCT(CT, val, root_of_subgraph_to_update)")
         append_translated_statements(sm1)
 
+    # generate initialization code for output
     insert_at_begin(block, mixed_program_constant_tree)
     generate_output_file_blocks()

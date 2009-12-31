@@ -10,3 +10,42 @@ struct node {
 struct graph {
   struct node *root;
 } CT;
+
+void right_rotate(struct graph *g)
+{
+  int balanced;
+
+  /* to check if the tree is suitable for right
+     rotation, we call it balance value */
+  balanced = calculate_balance(g);
+  switch (balanced)
+    {
+    case 2:
+      /* insert 2 nodes, and interchange the left 2 nodes */
+      {
+	struct node *tmp, *node8, *node9;
+	node8 = new_leaf_node();
+	node9 = new_leaf_node();
+	tmp = g->root->left;
+	g->root->left = node9;
+	node8->left = tmp->left;
+	node8->right = tmp->right;
+	tmp->left = node8;
+	tmp->right = g->root;
+	g->root = tmp;
+      }
+      break;
+
+      /* ... */
+      /* case 1, 3 may be simplified and merged? */
+    default:
+      break;
+    }
+}
+
+void left_rotate(struct graph *g)
+{
+  /* symmetric operations for left rotation. */
+  /* TBD, to be done */
+}
+
