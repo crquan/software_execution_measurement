@@ -34,6 +34,7 @@ for block in blocks:
 
         # choose a the root node in the graph to be changed
         selected = random(pointers)
+        # translated code
         sm1 = construct_proper_update_for_output("updateCT(CT, val, root_of_subgraph_to_update)")
         append_translated_statements(sm1)
 
