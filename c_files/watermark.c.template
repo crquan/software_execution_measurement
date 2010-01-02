@@ -1,0 +1,12 @@
+
+/* -*- mode: c; -*- */
+
+struct node {
+  struct node *left, *right;
+  enum {Constant, Variable, Operator} type;
+  void *pointer;
+};
+
+struct graph {
+  struct node *root;
+} CT;
