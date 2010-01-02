@@ -25,7 +25,7 @@ class SimpleEncoder:
             return 0
         else:
             return 1
-        
+
     def _get_value(self, node):
         if type(node) == c_ast.ID:
             return node.name
@@ -51,7 +51,7 @@ class SimpleEncoder:
 
         if cmp(code1[1].op, "=") != 0:
             r1 = '(' + y1 + code1[1].op[0] + r1 + ')'
-            
+
         if cmp(code2[1].op, "=") != 0:
             r2 = '(' + y2 + code2[1].op[0] + r2 + ')'
 
@@ -84,10 +84,10 @@ class SimpleEncoder:
             else:
                 self._new_code.append(self._code_list[i][1][0])
                 i += 1
-        
+
         self._new_code.append(self._code_list[i][1][0])
-    
-        return self._new_code 
+
+        return self._new_code
 
 #if __name__ == "__main__":
 #    code_list = [['S', 'i = 1;'],\

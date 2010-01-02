@@ -4,7 +4,7 @@ import sys
 from pycparser import c_parser, c_ast, parse_file
 
 class IDVisitor(c_ast.NodeVisitor):
-    
+
     def __init__(self, text):
         c_ast.NodeVisitor.__init__(self)
         self._ID_list = []
@@ -15,7 +15,7 @@ class IDVisitor(c_ast.NodeVisitor):
     def visit_ID(self, node):
         if node.name not in self._ID_list:
             self._ID_list.append(node.name)
-    
+
     def get_ID_list(self):
         return self._ID_list
 
@@ -29,6 +29,6 @@ if __name__ == "__main__":
     content = "".join(file(filename).readlines())
     idv = IDVisitor(content)
     ans = idv.get_ID_list()
-    
+
     for i in ans:
         print i
