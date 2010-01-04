@@ -1,0 +1,5 @@
+# latex tmp files
+
+*.aux
+*.dvi
+*.log
