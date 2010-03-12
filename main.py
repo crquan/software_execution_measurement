@@ -1,16 +1,18 @@
 #/usr/bin/python
 
-import sys, os
+import sys, os, random, math
 from CodeBlocksVisitor import CodeBlocksVisitor
 from SimpleWatermarkTemplate import SimpleWatermarkTemplate
 from SimpleMixer import SimpleMixer
 from SimpleEncoder import SimpleEncoder
+from SimplePBWMMixer import SimplePBWMMixer
+from SimplePBWMTemplate import SimplePBWMTemplate
 
 class Main:
     """
         main
     """
-    _WM2_HEADER = \
+    _PBWM_HEADER = \
     ["""
         extern int request_initialise_wm();
         extern int request_update_wm(int, char *, int);
@@ -20,6 +22,7 @@ class Main:
 
     def __init__(self, code_lines):
         self._origin_code_lists = code_lines
+        random.seed()
 
     def _block_list_extend(self, info, code_list):
         new_list = []
@@ -62,6 +65,27 @@ class Main:
 
         return merged_blocks
 
+    def _encoding_block_id(self, id_list):
+        max_id = max(id_list)
+        min_bitstring_length = int(math.ceil(math.log(max_id) / math.log(2)))
+        print "Minimal Bit String Length is %d, please give your preferred value:" % (min_bitstring_length,)
+        bitstring_length = int(raw_input()) 
+        while bitstring_length < min_bitstring_length:
+            bitstring_length = int(raw_input()) 
+
+        encoded_list = []
+        for id in id_list:
+            id_string = ["0" for i in range(bitstring_length)]
+            i = bitstring_length - 1
+            while id != 0:
+                if id % 2 == 1:
+                    id_string[i] = '1'
+                i -= 1
+                id /= 2
+            encoded_list.append("".join(id_string))
+
+        return encoded_list
+
     def run(self):
         origin_text = "".join(self._origin_code_lists)
         origin_cbv = CodeBlocksVisitor(origin_text)
@@ -69,16 +93,24 @@ class Main:
         origin_block_list = self._block_list_extend(origin_block_list_info, \
                                                     self._origin_code_lists)
 
+        block_id_list = range(0, len(origin_block_list) * 2)
+        random.shuffle(block_id_list)
+        block_id_list = block_id_list[:len(origin_block_list)]
+        i = 0
         print "Origin code blocks"
         for block in origin_block_list:
-            print block
+            print "Block %d: ID --- %d, content %s\n" % \
+                    (i, block_id_list[i], block)
+            i += 1
         print
+
+        print "Encoding Block ID..."
+        block_id_string_list = self._encoding_block_id(block_id_list)
 
         i = 0
         encode_block_list = []
         for block in origin_block_list:
             print "Dealing with block " + str(i)
-            i += 1
 
             wm_generator = SimpleWatermarkTemplate()
             [wm_code_lists, wm_text, wm_info] = wm_generator.get_template(len(block))
@@ -118,9 +150,28 @@ class Main:
             print "".join(encoded_code_list)
             print
 
+
+            print "Generate path based watermark template"
+            spbwmt = SimplePBWMTemplate()
+            [spbwmt_code_list, spbwmt_full_code] = spbwmt.get_template(block_id_string_list[i])
+            print "Path based watermark template is:"
+            print spbwmt_full_code
+            print
+
+            print "Mix the encoded code with path based watermark template"
+            spbwmm = SimplePBWMMixer()
+            spbwmm.set_source_code(encoded_code_list)
+            spbwmm.set_pbwm_code(spbwmt_code_list)
+            encoded_code_list = spbwmm.work()
+            print "Final mixed code is"
+            print "".join(encoded_code_list)
+            print
+
             encode_block_list.append(encoded_code_list)
+            i += 1
+
         
-        new_code = self._WM2_HEADER + self._merge_blocks(self._origin_code_lists, \
+        new_code = self._PBWM_HEADER + self._merge_blocks(self._origin_code_lists, \
                                       origin_block_list_info, \
                                       encode_block_list)
 
