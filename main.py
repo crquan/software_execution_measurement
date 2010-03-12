@@ -10,6 +10,13 @@ class Main:
     """
         main
     """
+    _WM2_HEADER = \
+    ["""
+        extern int request_initialise_wm();
+        extern int request_update_wm(int, char *, int);
+        extern int request_retrieval_wm(int, int *);
+        extern int request_release_wm(int);
+    """]
 
     def __init__(self, code_lines):
         self._origin_code_lists = code_lines
@@ -113,7 +120,7 @@ class Main:
 
             encode_block_list.append(encoded_code_list)
         
-        new_code = self._merge_blocks(self._origin_code_lists, \
+        new_code = self._WM2_HEADER + self._merge_blocks(self._origin_code_lists, \
                                       origin_block_list_info, \
                                       encode_block_list)
 
