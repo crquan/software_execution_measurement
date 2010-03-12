@@ -19,25 +19,25 @@ class SimplePBWMMixer:
         srclen = len(self._source_code)
         pbwmlen = len(self._pbwm_code)
 
-        if pbwmlen < self._pbwm_intro_len:
+        if pbwmlen < self._pbwm_intro_len - 1:
             return self._source_code
 
         i = 0
         j = 2
         k = 0
 
-        while j < self._pbwm_intro_len:
+        while j < self._pbwm_intro_len - 1:
             self._mix_code_list.append(self._pbwm_code[j])
             j += 1
 
-        bit_per_statement = (pbwmlen - 6) / srclen
-        if (pbwmlen - 6) % srclen != 0:
+        bit_per_statement = (pbwmlen - 7) / srclen
+        if (pbwmlen - 7) % srclen != 0:
             bit_per_statement += 1
 
-        while i < srclen and j < pbwmlen:
+        while i < srclen and j < pbwmlen - 1:
             k = 0
             self._mix_code_list.append(self._source_code[i])
-            while k < bit_per_statement and (j + k) < pbwmlen:
+            while k < bit_per_statement and (j + k) < pbwmlen - 1:
                 self._mix_code_list.append(self._pbwm_code[j + k])
                 k += 1
             j += bit_per_statement
@@ -95,7 +95,7 @@ if __name__ == "__main__":
             {
             PBWM_8216475039 = '0';
             request_update_wm(PBWM_5631042789, &PBWM_8216475039, 1);
-           }\n"""]
+           }\n""","}"]
 
     spbwmm = SimplePBWMMixer()
     spbwmm.set_source_code(source)
