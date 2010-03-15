@@ -14,10 +14,12 @@ class Main:
     """
     _PBWM_HEADER = \
     ["""
+        /* Path-based watermark library functions declaration begin */
         extern int request_initialise_wm();
         extern int request_update_wm(int, char *, int);
         extern int request_retrieval_wm(int, int *);
         extern int request_release_wm(int);
+        /* Path-based watermark library functions declaration end */
     """]
 
     def __init__(self, code_lines):
@@ -66,6 +68,10 @@ class Main:
         return merged_blocks
 
     def _encoding_block_id(self, id_list):
+        '''
+        Encode the block id into binary strings with specific length. Unused bits are 
+        padded with '0's
+        '''
         max_id = max(id_list)
         min_bitstring_length = int(math.ceil(math.log(max_id) / math.log(2)))
         print "Minimal Bit String Length is %d, please give your preferred value:" % (min_bitstring_length,)
@@ -93,6 +99,9 @@ class Main:
         origin_block_list = self._block_list_extend(origin_block_list_info, \
                                                     self._origin_code_lists)
 
+        '''
+        Assign each block a unique ID number
+        '''
         block_id_list = range(0, len(origin_block_list) * 2)
         random.shuffle(block_id_list)
         block_id_list = block_id_list[:len(origin_block_list)]
@@ -104,14 +113,23 @@ class Main:
             i += 1
         print
 
+        '''
+        Encoding the block IDs into binary strings
+        '''
         print "Encoding Block ID..."
         block_id_string_list = self._encoding_block_id(block_id_list)
 
+        '''
+        transform on each block
+        '''
         i = 0
         encode_block_list = []
         for block in origin_block_list:
             print "Dealing with block " + str(i)
 
+            '''
+            Generate the watermark template
+            '''
             wm_generator = SimpleWatermarkTemplate()
             [wm_code_lists, wm_text, wm_info] = wm_generator.get_template(len(block))
 
@@ -123,6 +141,9 @@ class Main:
             wm_block_list = self._block_list_extend(wm_block_list_info, \
                                                     wm_code_lists)
 
+            '''
+            Mix the watermark code with original code
+            '''
             print "Watermark code blocks"
             for wmblock in wm_block_list:
                 print wmblock
@@ -143,6 +164,9 @@ class Main:
             print "".join(tmp_code)
             print
 
+            '''
+            Encode the mixed code
+            '''
             encoder = SimpleEncoder(mixcode)
             encoded_code_list = encoder.encode()
             
@@ -166,11 +190,16 @@ class Main:
             print "Final mixed code is"
             print "".join(encoded_code_list)
             print
-
+        
+            encoded_code_list.insert(0, "/* Block ID: %d, %s */" % 
+                                     (block_id_list[i], block_id_string_list[i]))
             encode_block_list.append(encoded_code_list)
             i += 1
 
         
+        '''
+        Add the external watermark declaration to the processed program
+        '''
         new_code = self._PBWM_HEADER + self._merge_blocks(self._origin_code_lists, \
                                       origin_block_list_info, \
                                       encode_block_list)
