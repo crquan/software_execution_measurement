@@ -1,9 +1,13 @@
 /*
  * This is an example for how-to use the kernel monitor for watermarking code:
  * 
- * Compiled as:
+ * Compiled as a separate program:
  *
  *   gcc -Wall -m32 -o watermarked_test_with_km kernel_monitor/test.c -lm
+ *
+ * Compiled as a library:
+ *
+ *   gcc -Wall -fPIC -O2 -shared -Wl,-shared,-soname,libwatermark.so.1 -m32 -o libwatermark.so.1 kernel_monitor/watermarked-test.c -lm
  *
  */
 
