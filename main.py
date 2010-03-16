@@ -125,6 +125,7 @@ class Main:
         i = 0
         encode_block_list = []
         for block in origin_block_list:
+            encoded_code_list = []
             print "Dealing with block " + str(i)
 
             '''
@@ -191,7 +192,7 @@ class Main:
             print "".join(encoded_code_list)
             print
         
-            encoded_code_list.insert(0, "/* Block ID: %d, %s */" % 
+            encoded_code_list.insert(0, "/* Block ID: %d, %s */\n" % 
                                      (block_id_list[i], block_id_string_list[i]))
             encode_block_list.append(encoded_code_list)
             i += 1

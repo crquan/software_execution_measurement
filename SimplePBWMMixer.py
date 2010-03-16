@@ -30,22 +30,40 @@ class SimplePBWMMixer:
             self._mix_code_list.append(self._pbwm_code[j])
             j += 1
 
-        bit_per_statement = (pbwmlen - 7) / srclen
-        if (pbwmlen - 7) % srclen != 0:
-            bit_per_statement += 1
+        if (pbwmlen - 7) >= srclen:
+            bit_per_statement = (pbwmlen - 7) / srclen
+            if (pbwmlen - 7) % srclen != 0:
+                bit_per_statement += 1
 
-        while i < srclen and j < pbwmlen - 1:
-            k = 0
-            self._mix_code_list.append(self._source_code[i])
-            while k < bit_per_statement and (j + k) < pbwmlen - 1:
-                self._mix_code_list.append(self._pbwm_code[j + k])
-                k += 1
-            j += bit_per_statement
-            i += 1
+            while i < srclen and j < pbwmlen - 1:
+                k = 0
+                self._mix_code_list.append(self._source_code[i])
+                while k < bit_per_statement and (j + k) < pbwmlen - 1:
+                    self._mix_code_list.append(self._pbwm_code[j + k])
+                    k += 1
+                j += bit_per_statement
+                i += 1
 
-        while i < srclen:
-            self._mix_code_list.append(self._source_code[i])
-            i += 1
+            while i < srclen:
+                self._mix_code_list.append(self._source_code[i])
+                i += 1
+        else:
+            statement_per_bit = srclen / (pbwmlen - 7)
+            if statement_per_bit % (pbwmlen - 7) != 0:
+                statement_per_bit += 1
+
+            while i < srclen and j < pbwmlen - 1:
+                k = 0
+                while k < statement_per_bit and (i + k) < srclen:
+                    self._mix_code_list.append(self._source_code[i + k])
+                    k += 1
+                i += statement_per_bit
+                self._mix_code_list.append(self._pbwm_code[j])
+                j += 1
+
+            while j < pbwmlen - 1:
+                self._mix_code_list.append(self._pbwm_code[j])
+                j += 1
 
         return self._mix_code_list
 
