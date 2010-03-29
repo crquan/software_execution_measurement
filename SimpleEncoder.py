@@ -19,7 +19,7 @@ class SimpleEncoder:
             return False
 
     def _assignment_type_test(self, lvalue, rvalue):
-        lvalue_re = re.compile('\b'+lvalue+'\b')
+        lvalue_re = re.compile('\b%s\b' % (lvalue,))
         ans = lvalue_re.match(rvalue)
         if ans != None:
             return 0
@@ -36,7 +36,7 @@ class SimpleEncoder:
             str += self._get_value(node.right)
             return str
         else:
-            print "Unhandled type " + str(type(node))
+            print "Unhandled type %s" % (type(node),)
             return None
 
     def _execute_encode(self, code1, code2):
@@ -45,7 +45,7 @@ class SimpleEncoder:
         y1 = self._get_value(code1[1].lvalue)
         y2 = self._get_value(code2[1].lvalue)
 
-        r1 = '(' + self._get_value(code1[1].rvalue) + ')'
+        r1 = '( %s )' % (self._get_value(code1[1].rvalue),)
         r2 = '(' + self._get_value(code2[1].rvalue) + ')'
 
         if cmp(code1[1].op, "=") != 0:
@@ -53,13 +53,13 @@ class SimpleEncoder:
         if cmp(code2[1].op, "=") != 0:
             r2 = '(' + y2 + code2[1].op[0] + r2 + ')'
 
-        tmp_code.append(y1 + ' = ' + r1 + ' + ' + r2 + ';\n')
+        tmp_code.append('%s = %s + %s;\n' % (y1, r1, r2,))
         if self._assignment_type_test(y1, r1) == 1:
-            tmp_code.append(y2 + ' = ' + y1 + ' - 2 * ' + r2 + ';\n')
+            tmp_code.append('%s = %s - 2 * %s;\n' % (y2, y1, r2,))
         else:
             tmp_code.append(y2 + ' = ' + y1 + ' - ' + r2 + ';\n')
-        tmp_code.append(y1 + ' = (' + y1 + ' + ' + y2 + ')/2;\n')
-        tmp_code.append(y2 + ' = ' + y1 + ' - ' + y2 + ';\n')
+        tmp_code.append("%s = ( %s + %s ) / 2;\n" % (y1, y1, y2,))
+        tmp_code.append("%s = %s - %s;\n" % (y2, y1, y2,))
 
         return tmp_code
 
